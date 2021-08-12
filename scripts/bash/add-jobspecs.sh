@@ -14,13 +14,13 @@ cat << EOF
         "name": "terra",
         "body": {
           "endpoint": "terra",
-          "contract_address": "terra1tndcaqxkpc5ce9qee5ggqf430mr2z3pefe5wj6",
+          "contract_address": "terra1328htwfaumxyqdew53grfngdqlzk30gg3hfeta",
           "account_address": "$1",
           "fluxmonitor": {
             "requestData": {
               "data": { "from": "LINK", "to": "USD" }
             },
-            "feeds": [{ "url": "http://price-adapter-1:8080" }, { "url": "http://price-adapter-2:8080" },  { "url": "http://price-adapter-3:8080" }],
+            "feeds": [{ "url": "http://price-adapter-1:8080" }],
             "threshold": 0.3,
             "absoluteThreshold": 0,
             "precision": 8,
@@ -53,13 +53,13 @@ cat << EOF
         "name": "terra",
         "body": {
           "endpoint": "terra",
-          "contract_address": "terra1z449mpul3pwkdd3892gv28ewv5l06w7895wewm",
+          "contract_address": "terra1lmms5an7v97sy6vkm8la7s87kpwdk4ve4tvywx",
           "account_address": "$1",
           "fluxmonitor": {
             "requestData": {
               "data": { "from": "LUNA", "to": "USD" }
             },
-            "feeds": [{ "url": "http://price-adapter-1:8080" }, { "url": "http://price-adapter-2:8080" },  { "url": "http://price-adapter-3:8080" }],
+            "feeds": [{ "url": "http://price-adapter-1:8080" }],
             "threshold": 0.3,
             "absoluteThreshold": 0,
             "precision": 8,
