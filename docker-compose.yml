@@ -17,7 +17,7 @@ x-price-adapter-def: &price-adapter-def
     - terra
 
 x-chainlink-node-def: &cl-node-def
-  image: smartcontract/chainlink:0.10.3
+  image: smartcontract/chainlink:0.10.11
   restart: on-failure
   depends_on:
     - postgres
@@ -62,56 +62,56 @@ services:
     networks:
       - terra
 
-  # terrad:
-  #   image: terramoney/localterra-core:bombay
-  #   pull_policy: always
-  #   volumes:
-  #     - ./LocalTerra/config:/root/.terra/config
-  #   networks:
-  #     - terra
-  #   ports:
-  #     - "26657:26657"
-  #     - "1317:1317"
-  #   command: terrad start
+  terrad:
+    image: terramoney/localterra-core:bombay
+    pull_policy: always
+    volumes:
+      - ./LocalTerra/config:/root/.terra/config
+    networks:
+      - terra
+    ports:
+      - "26657:26657"
+      - "1317:1317"
+    command: terrad start
 
-  # fcd-collector:
-  #   image: terramoney/fcd:bombay
-  #   pull_policy: always
-  #   depends_on:
-  #     - terrad
-  #     - postgres
-  #   volumes:
-  #     - ./LocalTerra/logs:/app/logs
-  #   networks:
-  #     - terra
-  #   env_file: ./fcd.env
-  #   command: collector
+  fcd-collector:
+    image: terramoney/fcd:bombay
+    pull_policy: always
+    depends_on:
+      - terrad
+      - postgres
+    volumes:
+      - ./LocalTerra/logs:/app/logs
+    networks:
+      - terra
+    env_file: ./fcd.env
+    command: collector
 
-  # oracle:
-  #   image: terramoney/pseudo-feeder:bombay
-  #   pull_policy: always
-  #   depends_on:
-  #     - terrad
-  #   networks:
-  #     - terra
-  #   environment:
-  #     TESTNET_LCD_URL: https://bombay-lcd.terra.dev
-  #   command: start
+  oracle:
+    image: terramoney/pseudo-feeder:bombay
+    pull_policy: always
+    depends_on:
+      - terrad
+    networks:
+      - terra
+    environment:
+      TESTNET_LCD_URL: https://bombay-lcd.terra.dev
+    command: start
 
-  # fcd-api:
-  #   image: terramoney/fcd:bombay
-  #   pull_policy: always
-  #   depends_on:
-  #     - terrad
-  #     - postgres
-  #   volumes:
-  #     - ./LocalTerra/logs:/app/logs
-  #   networks:
-  #     - terra
-  #   ports:
-  #     - "3060:3060"
-  #   env_file: ./fcd.env
-  #   command: start
+  fcd-api:
+    image: terramoney/fcd:bombay
+    pull_policy: always
+    depends_on:
+      - terrad
+      - postgres
+    volumes:
+      - ./LocalTerra/logs:/app/logs
+    networks:
+      - terra
+    ports:
+      - "3060:3060"
+    env_file: ./fcd.env
+    command: start
 
   chainlink-node-1:
     <<: *cl-node-def
@@ -173,8 +173,7 @@ services:
     ports:
       - "8084:8080"
     environment:
-      # free keys, not security-critical, but need to be provided externally eventually
-      - API_KEY=8752418fc8665de247def11dadf97aae7e3bb090
+      - "API_KEY=${CRYPTOAPIS_API_KEY}"
 
   price-adapter-3:
     <<: *price-adapter-def
@@ -182,7 +181,7 @@ services:
     ports:
       - "8085:8080"
     environment:
-      - API_KEY=fec70f798ace5d55b5a329b6d17f881e20151c27acec5bc942884e0f9fa6720f
+      - "API_KEY=${CRYPTOCOMPARE_API_KEY}"
 
   chain-adapter-1:
     <<: *chain-adapter-def
