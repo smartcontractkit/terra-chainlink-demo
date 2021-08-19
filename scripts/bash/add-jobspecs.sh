@@ -2,6 +2,8 @@
 #!/bin/bash
 source ./scripts/bash/common.sh
 echo "Adding JobSpecs to Chainlink node..."
+LINKUSD_FEED_ADDRESS=$1
+LUNAUSD_FEED_ADDRESS=$2
 
 
 function jobspec() {
@@ -15,7 +17,7 @@ cat << EOF
         "name": "terra",
         "body": {
           "endpoint": "terra",
-          "contract_address": "$3",
+          "contract_address": "$LINKUSD_FEED_ADDRESS",
           "account_address": "$1",
           "fluxmonitor": {
             "requestData": {
@@ -54,7 +56,7 @@ cat << EOF
         "name": "terra",
         "body": {
           "endpoint": "terra",
-          "contract_address": "$3",
+          "contract_address": "$LUNAUSD_FEED_ADDRESS",
           "account_address": "$1",
           "fluxmonitor": {
             "requestData": {
@@ -81,6 +83,7 @@ cat << EOF
 EOF
 )
 }
+
 
 CL_URL="http://localhost:6691"
 login_cl "$CL_URL"
