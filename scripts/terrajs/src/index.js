@@ -28,7 +28,8 @@ const mk = new MnemonicKey({
 
 const terra = new LCDClient({
   URL: 'https://bombay-lcd.terra.dev',
-  chainID: 'bombay-0009',
+  chainID: 'bombay-9',
+  gasPrices: { uluna: 0.15 },
 });
 
 const wallet = terra.wallet(mk);
