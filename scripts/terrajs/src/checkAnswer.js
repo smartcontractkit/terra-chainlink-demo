@@ -7,7 +7,7 @@ import {
 
 const terra = new LCDClient({
   URL: "https://bombay-lcd.terra.dev",
-  chainID: "bombay-0008",
+  chainID: "bombay-9",
   gasPrices: { uluna: 0.015 },
 });
 
