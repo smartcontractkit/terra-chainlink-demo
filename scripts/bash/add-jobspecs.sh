@@ -13,32 +13,32 @@ FBUSD_AGGREGATOR=($(jq -r '.contracts | keys[6]' ./scripts/terrajs/addresses-mix
 AMZNUSD_AGGREGATOR=($(jq -r '.contracts | keys[7]' ./scripts/terrajs/addresses-mixed.json))
 
 # TODO: Extreme duplication, handle it
-function jobspec() {
-echo $(
-cat << EOF
-{"toml":"
-type            = \"webhook\"\n
-schemaVersion   = 1\n
-externalInitiators = [\n  
-{ name = \"terra\", spec = \"{ \\\\\\"type\\\\\\": \\\\\\"external\\\\\\", \\\\\\"endpoint\\\\\\": \\\\\\"terra\\\\\\", 
-\\\\\\"contract_address\\\\\\": \\\\\\"$LINKUSD_AGGREGATOR\\\\\\", 
-\\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
-\\\\\\"fluxmonitor\\\\\\": { 
-    \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"LINK\\\\\\", \\\\\\"to\\\\\\": \\\\\\"USD\\\\\\" } }, 
-    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://crypto-price-adapter-3:8080\\\\\\" }], 
-    \\\\\\"threshold\\\\\\": 0.3, 
-    \\\\\\"absoluteThreshold\\\\\\": 0, 
-    \\\\\\"precision\\\\\\": 8, 
-    \\\\\\"pollTimer\\\\\\": { \\\\\\"period\\\\\\": \\\\\\"30s\\\\\\" }, 
-    \\\\\\"idleTimer\\\\\\": { \\\\\\"duration\\\\\\": \\\\\\"50s\\\\\\" } } } \" }\n]\n
-observationSource   = \"\"\"\n    
-parse_request  [type=jsonparse path=\"\" data=\"\$(jobRun.requestBody)\"]\n    
-send_to_bridge [type=bridge timeout=0 name=\"$2\" 
-requestData=<{ \"data\": \$(parse_request)}>]\n    
-parse_request -> send_to_bridge\n\"\"\""}
-EOF
-)
-}
+# function jobspec() {
+# echo $(
+# cat << EOF
+# {"toml":"
+# type            = \"webhook\"\n
+# schemaVersion   = 1\n
+# externalInitiators = [\n  
+# { name = \"terra\", spec = \"{ \\\\\\"type\\\\\\": \\\\\\"external\\\\\\", \\\\\\"endpoint\\\\\\": \\\\\\"terra\\\\\\", 
+# \\\\\\"contract_address\\\\\\": \\\\\\"$LINKUSD_AGGREGATOR\\\\\\", 
+# \\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
+# \\\\\\"fluxmonitor\\\\\\": { 
+#     \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"LINK\\\\\\", \\\\\\"to\\\\\\": \\\\\\"USD\\\\\\" } }, 
+#     \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"https://adapters.main.stage.cldev.sh/nomics\\\\\\" }, { \\\\\\"url\\\\\\": \\\\\\"https://adapters.main.stage.cldev.sh/cryptocompare\\\\\\" }, { \\\\\\"url\\\\\\": \\\\\\"https://adapters.main.stage.cldev.sh/coingecko\\\\\\" }], 
+#     \\\\\\"threshold\\\\\\": 0.3, 
+#     \\\\\\"absoluteThreshold\\\\\\": 0, 
+#     \\\\\\"precision\\\\\\": 8, 
+#     \\\\\\"pollTimer\\\\\\": { \\\\\\"period\\\\\\": \\\\\\"30s\\\\\\" }, 
+#     \\\\\\"idleTimer\\\\\\": { \\\\\\"duration\\\\\\": \\\\\\"50s\\\\\\" } } } \" }\n]\n
+# observationSource   = \"\"\"\n    
+# parse_request  [type=jsonparse path=\"\" data=\"\$(jobRun.requestBody)\"]\n    
+# send_to_bridge [type=bridge timeout=0 name=\"$2\" 
+# requestData=<{ \"data\": \$(parse_request)}>]\n    
+# parse_request -> send_to_bridge\n\"\"\""}
+# EOF
+# )
+# }
 
 function jobspec2() {
 echo $(
@@ -52,7 +52,7 @@ externalInitiators = [\n
 \\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
 \\\\\\"fluxmonitor\\\\\\": { 
     \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"LUNA\\\\\\", \\\\\\"to\\\\\\": \\\\\\"USD\\\\\\" } }, 
-    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://crypto-price-adapter-3:8080\\\\\\" }], 
+    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"https://adapters.main.stage.cldev.sh/nomics\\\\\\" }, { \\\\\\"url\\\\\\": \\\\\\"https://adapters.main.stage.cldev.sh/cryptocompare\\\\\\" }, { \\\\\\"url\\\\\\": \\\\\\"https://adapters.main.stage.cldev.sh/coingecko\\\\\\" }], 
     \\\\\\"threshold\\\\\\": 0.3, 
     \\\\\\"absoluteThreshold\\\\\\": 0, 
     \\\\\\"precision\\\\\\": 8, 
@@ -69,60 +69,60 @@ EOF
 }
 
 
-function jobspec3() {
-echo $(
-cat << EOF
-{"toml":"
-type            = \"webhook\"\n
-schemaVersion   = 1\n
-externalInitiators = [\n  
-{ name = \"terra\", spec = \"{ \\\\\\"type\\\\\\": \\\\\\"external\\\\\\", \\\\\\"endpoint\\\\\\": \\\\\\"terra\\\\\\", 
-\\\\\\"contract_address\\\\\\": \\\\\\"$AAPLUSD_AGGREGATOR\\\\\\", 
-\\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
-\\\\\\"fluxmonitor\\\\\\": { 
-    \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"AAPL\\\\\\" } }, 
-    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-1:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-2:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-3:8080\\\\\\" }], 
-    \\\\\\"threshold\\\\\\": 0.3, 
-    \\\\\\"absoluteThreshold\\\\\\": 0, 
-    \\\\\\"precision\\\\\\": 8, 
-    \\\\\\"pollTimer\\\\\\": { \\\\\\"period\\\\\\": \\\\\\"30s\\\\\\" }, 
-    \\\\\\"idleTimer\\\\\\": { \\\\\\"duration\\\\\\": \\\\\\"50s\\\\\\" } } } \" }\n]\n
-observationSource   = \"\"\"\n    
-parse_request  [type=jsonparse path=\"\" data=\"\$(jobRun.requestBody)\"]\n    
-send_to_bridge [type=bridge timeout=0 name=\"$2\" 
-requestData=<{ \"data\": \$(parse_request)}>]\n    
-parse_request -> send_to_bridge\n\"\"\""}
-EOF
-)
-}
+# function jobspec3() {
+# echo $(
+# cat << EOF
+# {"toml":"
+# type            = \"webhook\"\n
+# schemaVersion   = 1\n
+# externalInitiators = [\n  
+# { name = \"terra\", spec = \"{ \\\\\\"type\\\\\\": \\\\\\"external\\\\\\", \\\\\\"endpoint\\\\\\": \\\\\\"terra\\\\\\", 
+# \\\\\\"contract_address\\\\\\": \\\\\\"$AAPLUSD_AGGREGATOR\\\\\\", 
+# \\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
+# \\\\\\"fluxmonitor\\\\\\": { 
+#     \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"AAPL\\\\\\" } }, 
+#     \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-1:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-2:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-3:8080\\\\\\" }], 
+#     \\\\\\"threshold\\\\\\": 0.3, 
+#     \\\\\\"absoluteThreshold\\\\\\": 0, 
+#     \\\\\\"precision\\\\\\": 8, 
+#     \\\\\\"pollTimer\\\\\\": { \\\\\\"period\\\\\\": \\\\\\"30s\\\\\\" }, 
+#     \\\\\\"idleTimer\\\\\\": { \\\\\\"duration\\\\\\": \\\\\\"50s\\\\\\" } } } \" }\n]\n
+# observationSource   = \"\"\"\n    
+# parse_request  [type=jsonparse path=\"\" data=\"\$(jobRun.requestBody)\"]\n    
+# send_to_bridge [type=bridge timeout=0 name=\"$2\" 
+# requestData=<{ \"data\": \$(parse_request)}>]\n    
+# parse_request -> send_to_bridge\n\"\"\""}
+# EOF
+# )
+# }
 
 
-function jobspec4() {
-echo $(
-cat << EOF
-{"toml":"
-type            = \"webhook\"\n
-schemaVersion   = 1\n
-externalInitiators = [\n  
-{ name = \"terra\", spec = \"{ \\\\\\"type\\\\\\": \\\\\\"external\\\\\\", \\\\\\"endpoint\\\\\\": \\\\\\"terra\\\\\\", 
-\\\\\\"contract_address\\\\\\": \\\\\\"$GOOGLUSD_AGGREGATOR\\\\\\", 
-\\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
-\\\\\\"fluxmonitor\\\\\\": { 
-    \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"GOOGL\\\\\\" } }, 
-    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-1:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-2:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-3:8080\\\\\\" }], 
-    \\\\\\"threshold\\\\\\": 0.3, 
-    \\\\\\"absoluteThreshold\\\\\\": 0, 
-    \\\\\\"precision\\\\\\": 8, 
-    \\\\\\"pollTimer\\\\\\": { \\\\\\"period\\\\\\": \\\\\\"30s\\\\\\" }, 
-    \\\\\\"idleTimer\\\\\\": { \\\\\\"duration\\\\\\": \\\\\\"50s\\\\\\" } } } \" }\n]\n
-observationSource   = \"\"\"\n    
-parse_request  [type=jsonparse path=\"\" data=\"\$(jobRun.requestBody)\"]\n    
-send_to_bridge [type=bridge timeout=0 name=\"$2\" 
-requestData=<{ \"data\": \$(parse_request)}>]\n    
-parse_request -> send_to_bridge\n\"\"\""}
-EOF
-)
-}
+# function jobspec4() {
+# echo $(
+# cat << EOF
+# {"toml":"
+# type            = \"webhook\"\n
+# schemaVersion   = 1\n
+# externalInitiators = [\n  
+# { name = \"terra\", spec = \"{ \\\\\\"type\\\\\\": \\\\\\"external\\\\\\", \\\\\\"endpoint\\\\\\": \\\\\\"terra\\\\\\", 
+# \\\\\\"contract_address\\\\\\": \\\\\\"$GOOGLUSD_AGGREGATOR\\\\\\", 
+# \\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
+# \\\\\\"fluxmonitor\\\\\\": { 
+#     \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"GOOGL\\\\\\" } }, 
+#     \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-1:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-2:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-3:8080\\\\\\" }], 
+#     \\\\\\"threshold\\\\\\": 0.3, 
+#     \\\\\\"absoluteThreshold\\\\\\": 0, 
+#     \\\\\\"precision\\\\\\": 8, 
+#     \\\\\\"pollTimer\\\\\\": { \\\\\\"period\\\\\\": \\\\\\"30s\\\\\\" }, 
+#     \\\\\\"idleTimer\\\\\\": { \\\\\\"duration\\\\\\": \\\\\\"50s\\\\\\" } } } \" }\n]\n
+# observationSource   = \"\"\"\n    
+# parse_request  [type=jsonparse path=\"\" data=\"\$(jobRun.requestBody)\"]\n    
+# send_to_bridge [type=bridge timeout=0 name=\"$2\" 
+# requestData=<{ \"data\": \$(parse_request)}>]\n    
+# parse_request -> send_to_bridge\n\"\"\""}
+# EOF
+# )
+# }
 
 
 function jobspec5() {
@@ -137,7 +137,7 @@ externalInitiators = [\n
 \\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
 \\\\\\"fluxmonitor\\\\\\": { 
     \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"BTC\\\\\\", \\\\\\"to\\\\\\": \\\\\\"USD\\\\\\" } }, 
-    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://crypto-price-adapter-3:8080\\\\\\" }], 
+    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"https://adapters.main.stage.cldev.sh/nomics\\\\\\" }, { \\\\\\"url\\\\\\": \\\\\\"https://adapters.main.stage.cldev.sh/cryptocompare\\\\\\" }, { \\\\\\"url\\\\\\": \\\\\\"https://adapters.main.stage.cldev.sh/coingecko\\\\\\" }], 
     \\\\\\"threshold\\\\\\": 0.3, 
     \\\\\\"absoluteThreshold\\\\\\": 0, 
     \\\\\\"precision\\\\\\": 8, 
@@ -165,7 +165,7 @@ externalInitiators = [\n
 \\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
 \\\\\\"fluxmonitor\\\\\\": { 
     \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"ETH\\\\\\", \\\\\\"to\\\\\\": \\\\\\"USD\\\\\\" } }, 
-    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://crypto-price-adapter-3:8080\\\\\\" }], 
+    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"https://adapters-ecs-dydx-1.staging.org.devnet.tools/cryptocompare/call\\\\\\" }], 
     \\\\\\"threshold\\\\\\": 0.3, 
     \\\\\\"absoluteThreshold\\\\\\": 0, 
     \\\\\\"precision\\\\\\": 8, 
@@ -181,147 +181,147 @@ EOF
 }
 
 
-function jobspec7() {
-echo $(
-cat << EOF
-{"toml":"
-type            = \"webhook\"\n
-schemaVersion   = 1\n
-externalInitiators = [\n  
-{ name = \"terra\", spec = \"{ \\\\\\"type\\\\\\": \\\\\\"external\\\\\\", \\\\\\"endpoint\\\\\\": \\\\\\"terra\\\\\\", 
-\\\\\\"contract_address\\\\\\": \\\\\\"$FBUSD_AGGREGATOR\\\\\\", 
-\\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
-\\\\\\"fluxmonitor\\\\\\": { 
-    \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"FB\\\\\\" } }, 
-    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-1:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-2:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-3:8080\\\\\\" }], 
-    \\\\\\"threshold\\\\\\": 0.3, 
-    \\\\\\"absoluteThreshold\\\\\\": 0, 
-    \\\\\\"precision\\\\\\": 8, 
-    \\\\\\"pollTimer\\\\\\": { \\\\\\"period\\\\\\": \\\\\\"30s\\\\\\" }, 
-    \\\\\\"idleTimer\\\\\\": { \\\\\\"duration\\\\\\": \\\\\\"50s\\\\\\" } } } \" }\n]\n
-observationSource   = \"\"\"\n    
-parse_request  [type=jsonparse path=\"\" data=\"\$(jobRun.requestBody)\"]\n    
-send_to_bridge [type=bridge timeout=0 name=\"$2\" 
-requestData=<{ \"data\": \$(parse_request)}>]\n    
-parse_request -> send_to_bridge\n\"\"\""}
-EOF
-)
-}
+# function jobspec7() {
+# echo $(
+# cat << EOF
+# {"toml":"
+# type            = \"webhook\"\n
+# schemaVersion   = 1\n
+# externalInitiators = [\n  
+# { name = \"terra\", spec = \"{ \\\\\\"type\\\\\\": \\\\\\"external\\\\\\", \\\\\\"endpoint\\\\\\": \\\\\\"terra\\\\\\", 
+# \\\\\\"contract_address\\\\\\": \\\\\\"$FBUSD_AGGREGATOR\\\\\\", 
+# \\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
+# \\\\\\"fluxmonitor\\\\\\": { 
+#     \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"FB\\\\\\" } }, 
+#     \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-1:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-2:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-3:8080\\\\\\" }], 
+#     \\\\\\"threshold\\\\\\": 0.3, 
+#     \\\\\\"absoluteThreshold\\\\\\": 0, 
+#     \\\\\\"precision\\\\\\": 8, 
+#     \\\\\\"pollTimer\\\\\\": { \\\\\\"period\\\\\\": \\\\\\"30s\\\\\\" }, 
+#     \\\\\\"idleTimer\\\\\\": { \\\\\\"duration\\\\\\": \\\\\\"50s\\\\\\" } } } \" }\n]\n
+# observationSource   = \"\"\"\n    
+# parse_request  [type=jsonparse path=\"\" data=\"\$(jobRun.requestBody)\"]\n    
+# send_to_bridge [type=bridge timeout=0 name=\"$2\" 
+# requestData=<{ \"data\": \$(parse_request)}>]\n    
+# parse_request -> send_to_bridge\n\"\"\""}
+# EOF
+# )
+# }
 
 
-function jobspec8() {
-echo $(
-cat << EOF
-{"toml":"
-type            = \"webhook\"\n
-schemaVersion   = 1\n
-externalInitiators = [\n  
-{ name = \"terra\", spec = \"{ \\\\\\"type\\\\\\": \\\\\\"external\\\\\\", \\\\\\"endpoint\\\\\\": \\\\\\"terra\\\\\\", 
-\\\\\\"contract_address\\\\\\": \\\\\\"$AMZNUSD_AGGREGATOR\\\\\\", 
-\\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
-\\\\\\"fluxmonitor\\\\\\": { 
-    \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"AMZN\\\\\\" } }, 
-    \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-1:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-2:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-3:8080\\\\\\" }], 
-    \\\\\\"threshold\\\\\\": 0.3, 
-    \\\\\\"absoluteThreshold\\\\\\": 0, 
-    \\\\\\"precision\\\\\\": 8, 
-    \\\\\\"pollTimer\\\\\\": { \\\\\\"period\\\\\\": \\\\\\"30s\\\\\\" }, 
-    \\\\\\"idleTimer\\\\\\": { \\\\\\"duration\\\\\\": \\\\\\"50s\\\\\\" } } } \" }\n]\n
-observationSource   = \"\"\"\n    
-parse_request  [type=jsonparse path=\"\" data=\"\$(jobRun.requestBody)\"]\n    
-send_to_bridge [type=bridge timeout=0 name=\"$2\" 
-requestData=<{ \"data\": \$(parse_request)}>]\n    
-parse_request -> send_to_bridge\n\"\"\""}
-EOF
-)
-}
+# function jobspec8() {
+# echo $(
+# cat << EOF
+# {"toml":"
+# type            = \"webhook\"\n
+# schemaVersion   = 1\n
+# externalInitiators = [\n  
+# { name = \"terra\", spec = \"{ \\\\\\"type\\\\\\": \\\\\\"external\\\\\\", \\\\\\"endpoint\\\\\\": \\\\\\"terra\\\\\\", 
+# \\\\\\"contract_address\\\\\\": \\\\\\"$AMZNUSD_AGGREGATOR\\\\\\", 
+# \\\\\\"account_address\\\\\\": \\\\\\"$1\\\\\\", 
+# \\\\\\"fluxmonitor\\\\\\": { 
+#     \\\\\\"requestData\\\\\\": { \\\\\\"data\\\\\\": { \\\\\\"from\\\\\\": \\\\\\"AMZN\\\\\\" } }, 
+#     \\\\\\"feeds\\\\\\": [{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-1:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-2:8080\\\\\\" },{ \\\\\\"url\\\\\\": \\\\\\"http://stock-price-adapter-3:8080\\\\\\" }], 
+#     \\\\\\"threshold\\\\\\": 0.3, 
+#     \\\\\\"absoluteThreshold\\\\\\": 0, 
+#     \\\\\\"precision\\\\\\": 8, 
+#     \\\\\\"pollTimer\\\\\\": { \\\\\\"period\\\\\\": \\\\\\"30s\\\\\\" }, 
+#     \\\\\\"idleTimer\\\\\\": { \\\\\\"duration\\\\\\": \\\\\\"50s\\\\\\" } } } \" }\n]\n
+# observationSource   = \"\"\"\n    
+# parse_request  [type=jsonparse path=\"\" data=\"\$(jobRun.requestBody)\"]\n    
+# send_to_bridge [type=bridge timeout=0 name=\"$2\" 
+# requestData=<{ \"data\": \$(parse_request)}>]\n    
+# parse_request -> send_to_bridge\n\"\"\""}
+# EOF
+# )
+# }
 
-CL_URL="http://localhost:6691"
-login_cl "$CL_URL"
+CL_URL=https://ter-t-0.staging.org.devnet.tools
+# login_cl "$CL_URL"
 ORACLE_ADDRESS="terra1757tkx08n0cqrw7p86ny9lnxsqeth0wgp0em95"
-BRIDGE_NAME="terra-adapter1"
+BRIDGE_NAME="write-adapter"
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
-
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec2 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
-
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec3 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
-
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec4 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
-
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec5 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
-
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec6 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
-
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec7 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
-
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec8 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
-
-CL_URL="http://localhost:6692"
-login_cl "$CL_URL"
-ORACLE_ADDRESS="terra17lmam6zguazs5q5u6z5mmx76uj63gldnse2pdp"
-BRIDGE_NAME="terra-adapter2"
-
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
 JOBID=$(curl -s -b ./cookiefile -d "$(jobspec2 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
 echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec3 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# # JOBID=$(curl -s -b ./cookiefile -d "$(jobspec3 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# # echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec4 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# # JOBID=$(curl -s -b ./cookiefile -d "$(jobspec4 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# # echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec5 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec5 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec6 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec6 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec7 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec7 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec8 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec8 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-CL_URL="http://localhost:6693"
-login_cl "$CL_URL"
-ORACLE_ADDRESS="terra199vw7724lzkwz6lf2hsx04lrxfkz09tg8dlp6r"
-BRIDGE_NAME="terra-adapter3"
+# CL_URL="http://localhost:6692"
+# login_cl "$CL_URL"
+# ORACLE_ADDRESS="terra17lmam6zguazs5q5u6z5mmx76uj63gldnse2pdp"
+# BRIDGE_NAME="terra-adapter2"
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec2 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec2 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec3 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec3 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec4 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec4 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec5 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec5 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec6 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec6 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec7 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec7 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
-JOBID=$(curl -s -b ./cookiefile -d "$(jobspec8 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
-echo $JOBID
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec8 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
+
+# CL_URL="http://localhost:6693"
+# login_cl "$CL_URL"
+# ORACLE_ADDRESS="terra199vw7724lzkwz6lf2hsx04lrxfkz09tg8dlp6r"
+# BRIDGE_NAME="terra-adapter3"
+
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
+
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec2 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
+
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec3 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
+
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec4 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
+
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec5 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
+
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec6 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
+
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec7 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
+
+# JOBID=$(curl -s -b ./cookiefile -d "$(jobspec8 $ORACLE_ADDRESS $BRIDGE_NAME)" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+# echo $JOBID
 
 echo "Jobspecs has been added to Chainlink nodes"
 
