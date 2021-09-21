@@ -4,13 +4,13 @@ login_cl() {
   CL_URL=$1
 
   username=""
-  password=""
+  password=$2
 
   while IFS= read -r line; do
     if [[ "$username" == "" ]]; then
       username=${line}
-    else
-      password=${line}
+    # else
+    #   password=${line}
     fi
   done <"./secrets/apicredentials"
 
