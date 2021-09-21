@@ -4,14 +4,14 @@ source ./scripts/bash/common.sh
 echo "Adding JobSpecs to Chainlink node..."
 set -o allexport; source .env; set +o allexport
 
-ETHUSD_AGGREGATOR=($(jq -r '.contracts | keys[0]' ./scripts/terrajs/addresses-bombay.json))
-GOOGLUSD_AGGREGATOR=($(jq -r '.contracts | keys[1]' ./scripts/terrajs/addresses-bombay.json))
-AMZNUSD_AGGREGATOR=($(jq -r '.contracts | keys[2]' ./scripts/terrajs/addresses-bombay.json))
-BTCUSD_AGGREGATOR=($(jq -r '.contracts | keys[3]' ./scripts/terrajs/addresses-bombay.json))
-LINKUSD_AGGREGATOR=($(jq -r '.contracts | keys[4]' ./scripts/terrajs/addresses-bombay.json))
-AAPLUSD_AGGREGATOR=($(jq -r '.contracts | keys[5]' ./scripts/terrajs/addresses-bombay.json))
-LUNAUSD_AGGREGATOR=($(jq -r '.contracts | keys[6]' ./scripts/terrajs/addresses-bombay.json))
-FBUSD_AGGREGATOR=($(jq -r '.contracts | keys[7]' ./scripts/terrajs/addresses-bombay.json))
+LINKUSD_AGGREGATOR=($(jq -r '.contracts | keys_unsorted[0]' ./scripts/terrajs/addresses-bombay.json))
+LUNAUSD_AGGREGATOR=($(jq -r '.contracts | keys_unsorted[1]' ./scripts/terrajs/addresses-bombay.json))
+BTCUSD_AGGREGATOR=($(jq -r '.contracts | keys_unsorted[2]' ./scripts/terrajs/addresses-bombay.json))
+ETHUSD_AGGREGATOR=($(jq -r '.contracts | keys_unsorted[3]' ./scripts/terrajs/addresses-bombay.json))
+AAPLUSD_AGGREGATOR=($(jq -r '.contracts | keys_unsorted[4]' ./scripts/terrajs/addresses-bombay.json))
+GOOGLUSD_AGGREGATOR=($(jq -r '.contracts | keys_unsorted[5]' ./scripts/terrajs/addresses-bombay.json))
+FBUSD_AGGREGATOR=($(jq -r '.contracts | keys_unsorted[6]' ./scripts/terrajs/addresses-bombay.json))
+AMZNUSD_AGGREGATOR=($(jq -r '.contracts | keys_unsorted[7]' ./scripts/terrajs/addresses-bombay.json))
 
 echo "LINKUSD_AGGREGATOR"
 echo $LINKUSD_AGGREGATOR
